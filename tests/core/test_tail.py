@@ -3,7 +3,11 @@ import subprocess
 import tempfile
 import unittest
 
+# 3p
+from nose.plugins.attrib import attr
 
+
+@attr(requires='todo')
 class TestTail(unittest.TestCase):
     def setUp(self):
         self.log_file = tempfile.NamedTemporaryFile()

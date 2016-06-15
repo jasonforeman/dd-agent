@@ -8,6 +8,9 @@ from tempfile import gettempdir, NamedTemporaryFile
 import time
 import unittest
 
+# 3p
+from nose.plugins.attrib import attr
+
 # project
 from checks.datadog import Dogstreams, EventDefaults
 
@@ -97,7 +100,9 @@ class TailTestCase(unittest.TestCase):
     def tearDown(self):
         self.log_file.close()
 
-
+# Don't run these tests on Windows since the temp file scheme used in these tests is hard to
+# support on Windows
+@attr(requires="todo")
 class TestDogstream(TailTestCase):
     gauge = {'metric_type': 'gauge'}
     counter = {'metric_type': 'counter'}
