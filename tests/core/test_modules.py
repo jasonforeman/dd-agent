@@ -60,7 +60,7 @@ class TestModuleLoad(unittest.TestCase):
 
     # This test fails on Windows, but we don't really care since it's only used
     # for a deprecated check loading scheme
-    @attr(requires="todo")
+    @attr('unix')
     def test_pathname_load_finds_package(self):
         """"Loading modules by absolute path should correctly set the name of
         the loaded module to include any package containing it."""

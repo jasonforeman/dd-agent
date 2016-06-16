@@ -63,7 +63,7 @@ def client_read(path):
     return TestServiceDiscovery.mock_tpls.get(image)[0][config_parts.index(config_part)]
 
 
-@attr(requires='todo')
+@attr('unix')
 class TestServiceDiscovery(unittest.TestCase):
     docker_container_inspect = {
         u'Id': u'69ff25598b2314d1cdb7752cc3a659fb1c1352b32546af4f1454321550e842c0',
