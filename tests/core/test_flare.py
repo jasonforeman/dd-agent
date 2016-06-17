@@ -92,6 +92,8 @@ class FlareTest(unittest.TestCase):
     def test_upload_with_case(self, mock_config, mock_tempdir, mock_stfrtime, mock_version, mock_requests):
         f = Flare(case_id=1337)
         f._ask_for_email = lambda: 'test@example.com'
+        f._open_tarfile()
+        f._tar.close()
 
         assert not mock_requests.called
         f.upload()
@@ -117,6 +119,8 @@ class FlareTest(unittest.TestCase):
     def test_upload_no_case(self, mock_config, mock_tempdir, mock_stfrtime, mock_version, mock_requests):
         f = Flare()
         f._ask_for_email = lambda: 'test@example.com'
+        f._open_tarfile()
+        f._tar.close()
 
         assert not mock_requests.called
         f.upload()
@@ -142,6 +146,8 @@ class FlareTest(unittest.TestCase):
     def test_upload_with_case_proxy(self, mock_config, mock_tempdir, mock_stfrtime, mock_version, mock_requests):
         f = Flare(case_id=1337)
         f._ask_for_email = lambda: 'test@example.com'
+        f._open_tarfile()
+        f._tar.close()
 
         assert not mock_requests.called
         f.upload()
@@ -168,13 +174,15 @@ class FlareTest(unittest.TestCase):
     def test_endpoint(self, mock_config, mock_temp, mock_stfrtime):
         f = Flare()
         f._ask_for_email = lambda: None
+        f._open_tarfile()
+        f._tar.close()
+
         try:
             f.upload()
             raise Exception('Should fail before')
         except Exception, e:
             self.assertEqual(str(e), "Your request is incorrect: Invalid inputs: 'API key unknown'")
 
-    @attr(requires='core_integration')
     @mock.patch('utils.flare.strftime', side_effect=mocked_strftime)
     @mock.patch('tempfile.gettempdir', side_effect=get_mocked_temp)
     @mock.patch('utils.flare.get_config', side_effect=get_mocked_config)
@@ -189,7 +197,6 @@ class FlareTest(unittest.TestCase):
             " - this file contains a credential (password in a uri) which has been removed in the collected version"
         )
 
-    @attr(requires='core_integration')
     @mock.patch('utils.flare.strftime', side_effect=mocked_strftime)
     @mock.patch('tempfile.gettempdir', side_effect=get_mocked_temp)
     @mock.patch('utils.flare.get_config', side_effect=get_mocked_config)
@@ -212,7 +219,6 @@ class FlareTest(unittest.TestCase):
             password_tests['uri_password_expected']
         )
 
-    @attr(requires='core_integration')
     @mock.patch('utils.flare.strftime', side_effect=mocked_strftime)
     @mock.patch('tempfile.gettempdir', side_effect=get_mocked_temp)
     @mock.patch('utils.flare.get_config', side_effect=get_mocked_config_with_proxy)
@@ -223,7 +229,6 @@ class FlareTest(unittest.TestCase):
         expected = 'http://proxy_user:proxy_pass@proxy.host.com:3128'
         self.assertEqual(expected, request_options['proxies']['https'])
 
-    @attr(requires='core_integration')
     @mock.patch('utils.flare.strftime', side_effect=mocked_strftime)
     @mock.patch('tempfile.gettempdir', side_effect=get_mocked_temp)
     @mock.patch('utils.flare.get_config', side_effect=get_mocked_config_with_proxy)
@@ -233,7 +238,6 @@ class FlareTest(unittest.TestCase):
         f.set_ssl_validation(request_options)
         self.assertFalse(request_options['verify'])
 
-    @attr(requires='core_integration')
     @mock.patch('utils.flare.strftime', side_effect=mocked_strftime)
     @mock.patch('tempfile.gettempdir', side_effect=get_mocked_temp)
     @mock.patch('utils.flare.get_config', side_effect=get_mocked_config)
