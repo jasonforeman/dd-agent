@@ -39,6 +39,7 @@ from config import (
     get_config,
     get_config_path,
     get_logging_config,
+    get_ssl_certificate,
     get_url_endpoint,
 )
 from jmxfetch import JMXFetch
@@ -172,11 +173,7 @@ class Flare(object):
         if self._config.get('skip_ssl_validation', False):
             options['verify'] = False
         elif Platform.is_windows():
-            options['verify'] = os.path.realpath(os.path.join(
-                os.path.dirname(os.path.realpath(__file__)),
-                os.pardir, os.pardir,
-                'datadog-cert.pem'
-            ))
+            options['verify'] = get_ssl_certificate('windows', 'datadog-cert.pem')
 
     # Upload the tar file
     def upload(self, email=None):

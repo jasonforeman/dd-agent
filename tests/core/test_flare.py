@@ -9,6 +9,7 @@ from nose.plugins.attrib import attr
 
 # project
 from utils.flare import Flare
+from utils.platform import Platform
 
 
 def get_mocked_config():
@@ -177,11 +178,10 @@ class FlareTest(unittest.TestCase):
         f._open_tarfile()
         f._tar.close()
 
-        try:
+        with self.assertRaises(Exception) as cm:
             f.upload()
-            raise Exception('Should fail before')
-        except Exception, e:
-            self.assertEqual(str(e), "Your request is incorrect: Invalid inputs: 'API key unknown'")
+
+        self.assertEqual(str(cm.exception), "Your request is incorrect: Invalid inputs: 'API key unknown'")
 
     @mock.patch('utils.flare.strftime', side_effect=mocked_strftime)
     @mock.patch('tempfile.gettempdir', side_effect=get_mocked_temp)
@@ -245,4 +245,13 @@ class FlareTest(unittest.TestCase):
         f = Flare()
         request_options = {}
         f.set_ssl_validation(request_options)
-        self.assertEquals(request_options.get('verify'), None)
+
+        expected_verify = None
+        if Platform.is_windows():
+            expected_verify = os.path.realpath(os.path.join(
+                os.path.dirname(os.path.realpath(__file__)),
+                os.pardir, os.pardir,
+                'datadog-cert.pem'
+            ))
+
+        self.assertEquals(request_options.get('verify'), expected_verify)
