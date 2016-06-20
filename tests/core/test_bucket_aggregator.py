@@ -35,7 +35,7 @@ class TestUnitMetricsBucketAggregator(unittest.TestCase):
 
     def wait_for_bucket_boundary(self, interval=None):
         i = interval or self.interval
-        while time.time() % i > 0.01:
+        while time.time() % i > 0.1:
             pass
 
     @staticmethod
